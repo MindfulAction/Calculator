@@ -35,6 +35,8 @@ button {
     border-bottom: 0px;
     margin-right: 20%;
     margin-left: 20%;
+    color: white;
+    background-color: darkgray;
 }
 
 #numsAndOperators {
@@ -49,4 +51,8 @@ button {
 
 #equals {
     height: 100%;
+}
+
+.highlightOperator {
+    background-color: darkgray;
 }
