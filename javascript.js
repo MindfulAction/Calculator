@@ -1,4 +1,4 @@
-//Need to fix multiple button presses and clean code
+//Need to add Del and decimal fucntionality -> keyboard support -> make look nice -> clean code
 
 let add = (num1, num2) => {
     return answer = num1 + num2;
@@ -28,24 +28,18 @@ let operate = (num1, operation, num2) => {
 //When a number is pressed immediately after an operator, reset the display and add the number to the display
 
 let updateNumbers = (event) => {
-    //************/ if (lastButtonPressed === "number") {
-    //     //Change the display text content to equal a concatenated string of the lastNumber clicked and this number clicked
-    //     display.textContent = lastNumber + `${event.target.textContent}`;
-    // } else {
-    //     //Change the display text content to match the value of the button pressed
-    //     display.textContent = `${event.target.textContent}`;
-    //**************/ }
     if (display.textContent == 0) {
         display.textContent = `${event.target.textContent}`;
-    }
-    if (lastButtonPressed === "number") {
+    } else if (lastButtonPressed === "number") {
         display.textContent += `${event.target.textContent}`;
+    } else {
+        display.textContent = event.target.textContent
     }
 
     //If an operator has been clicked previously then we need to update currentNumber
     if (operator != undefined) {
         //Update the currentNumberPressed to equal the textContent of the button pressed parsed as a number
-        currentNumber = Number(event.target.textContent)
+        currentNumber = Number(display.textContent);
         //If answer has a value, then update lastNumber to equal answer (in case an operation has already been executed)
         if (answer != undefined) {
             lastNumber = answer;
@@ -82,12 +76,25 @@ let updateOperator = (event) => {
 let clickedEquals = () => {
     //Set answer equal to the value returned from the operate function
     answer = operate(lastNumber, operator, currentNumber);
-    //Update display to show the answer
-    display.textContent = answer;
+    if (answer != undefined) {
+        //Update display to show the answer
+        display.textContent = answer;
+    }
 }
 
 let removeHighlightFromOperatorButton = () => {
     operatorHighlighted.classList.toggle("highlightOperator");
+    operatorHighlighted = undefined;
+}
+
+let clearMemory = () => {
+    lastNumber = 0;
+    currentNumber = 0;
+    answer = 0;
+    display.textContent = "0";
+    if (Array.from(document.querySelectorAll(".operator")).map(button => button.classList).some(button => button.toString().includes("highlightOperator"))) {
+        removeHighlightFromOperatorButton()
+    }
 }
 
 //////////////////////////////////////////////////////////
@@ -109,15 +116,22 @@ let digits = [];
 //Create var display that selects the calculator display -> we will use this to update the display to show the last button pressed or the answer to the operation
 let display = document.querySelector("#display");
 
+//Create nodelist for number buttons and add event listener to each
 let numButtons = document.querySelectorAll(".num");
 numButtons.forEach(button => {
     button.addEventListener("click", updateNumbers)
 })
 
+//Create nodelist for operator buttons and add event listener to each
 let operatorButtons = document.querySelectorAll(".operator");
 operatorButtons.forEach(button => {
     button.addEventListener("click", updateOperator)
 })
 
+//Create nodelist for equals button and add event listener 
 let equalsButton = document.querySelector("#equals");
 equalsButton.addEventListener("click", clickedEquals);
+
+//Create var that stores the "CLEAR" button element
+let clear = document.querySelector("#clear");
+clear.addEventListener("click", clearMemory)

@@ -17,8 +17,8 @@ body {
 }
 
 button {
-    width: 25%;
-    height: 10%;
+    /* width: 25%;
+    height: 10%; */
     font-weight: bold;
     font-size: 25px;
 }
@@ -42,6 +42,7 @@ button {
 #numsAndOperators {
     display: grid;
     grid-template-columns: repeat(3, 2fr);
+    width: 75%;
 }
 
 #numsAndOperators button {
@@ -50,9 +51,26 @@ button {
 }
 
 #equals {
-    height: 100%;
+    height: 60%;
+    width: 100%;
 }
 
 .highlightOperator {
     background-color: darkgray;
+}
+
+#decimal {
+    height: 20%;
+    width: 100%;
+}
+
+.edd {
+    display: flex;
+    flex-direction: column;
+    width: 25%;
+}
+
+#delete {
+    width: 100%;
+    height: 20%;
 }
