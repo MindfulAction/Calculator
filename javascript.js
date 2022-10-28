@@ -27,15 +27,8 @@ let operate = (num1, operation, num2) => {
 //When an operator is pressed store the value of the display as either lastNumber or currentNumber
 //When a number is pressed immediately after an operator, reset the display and add the number to the display
 
-let updateNumbers = (event) => {
-    if (display.textContent == 0) {
-        display.textContent = `${event.target.textContent}`;
-    } else if (lastButtonPressed === "number") {
-        display.textContent += `${event.target.textContent}`;
-    } else {
-        display.textContent = event.target.textContent
-    }
-
+let updateNumbers = () => {
+    determineDisplay();
     //If an operator has been clicked previously then we need to update currentNumber
     if (operator != undefined) {
         //Update the currentNumberPressed to equal the textContent of the button pressed parsed as a number
@@ -46,7 +39,7 @@ let updateNumbers = (event) => {
         }
     } else {
         //Update the lastNumberPressed to equal the textContent of the button pressed parsed as a number
-        lastNumber = Number(event.target.textContent)
+        lastNumber = Number(display.textContent)
     } 
     //If an operator was highlighted before the updateNumbers function was called, then we need to remove the highlight from that operator button
     if (operatorHighlighted != undefined) {
@@ -97,6 +90,33 @@ let clearMemory = () => {
     }
 }
 
+deleteLastNumberInput = () => {
+    if (lastButtonPressed == "number") {
+        display.textContent = display.textContent.substring(0, display.textContent.length - 1);
+        currentNumber = Number(display.textContent);
+    }
+    if (display.textContent == "") {
+        display.textContent = 0;
+    }    
+}
+
+let determineDisplay = () => {
+    if (display.textContent == 0) {
+        display.textContent = `${event.target.textContent}`;
+    } else if (lastButtonPressed === "number") {
+        display.textContent += `${event.target.textContent}`;
+    } else {
+        display.textContent = event.target.textContent
+    }
+    return display.textContent;
+}
+
+let inputDecimal = () => {
+    if (!display.textContent.includes(".")) {
+        determineDisplay();
+    }
+}
+
 //////////////////////////////////////////////////////////
 //Create var for lastNumber that will store the last number that was pressed and initialize to 0
 let lastNumber = 0;
@@ -135,3 +155,11 @@ equalsButton.addEventListener("click", clickedEquals);
 //Create var that stores the "CLEAR" button element
 let clear = document.querySelector("#clear");
 clear.addEventListener("click", clearMemory)
+
+//Create var that stores "Del" button element
+let del = document.querySelector("#delete");
+del.addEventListener("click", deleteLastNumberInput)
+
+//Create var that stores "decimal" button element
+let decimal = document.querySelector("#decimal");
+decimal.addEventListener("click", inputDecimal)
