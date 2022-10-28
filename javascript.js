@@ -1,4 +1,4 @@
-//Clean code
+//NOTE: Need to clean code (add helper functions, make easier to read, etc.)
 
 let add = (num1, num2) => {
     return answer = num1 + num2;

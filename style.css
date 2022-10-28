@@ -77,3 +77,8 @@ button {
     width: 100%;
     height: 20%;
 }
+
+p {
+    text-align: center;
+    margin: 0;
+}
