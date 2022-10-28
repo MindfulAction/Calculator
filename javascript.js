@@ -1,4 +1,4 @@
-//Keyboard support -> make look nice -> clean code
+//Clean code
 
 let add = (num1, num2) => {
     return answer = num1 + num2;

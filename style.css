@@ -8,7 +8,7 @@ body {
     flex-wrap: wrap;
     justify-content: center;
     height: 80vh;
-    border: 5px solid black;
+    border: 5px solid #F06543;
     padding: 10px;
     margin-bottom: 5px;
     margin-top: 0px;
@@ -21,6 +21,9 @@ button {
     height: 10%; */
     font-weight: bold;
     font-size: 25px;
+    background-color: #E0DFD5;
+    color: #313638;
+    border: 1px solid #F06543;
 }
 
 #display {
@@ -28,15 +31,15 @@ button {
     justify-content: center;
     font-weight: bolder;
     font-size: 35px;
-    border: 5px solid black;
+    border: 5px solid #F06543;
     padding: 10px;
     margin: 5px;
     margin-bottom: 0px;
     border-bottom: 0px;
     margin-right: 20%;
     margin-left: 20%;
-    color: white;
-    background-color: darkgray;
+    color: #E0DFD5;
+    background-color: #313638;
 }
 
 #numsAndOperators {
