@@ -1,4 +1,4 @@
-//Need to add Del and decimal fucntionality -> keyboard support -> make look nice -> clean code
+//Keyboard support -> make look nice -> clean code
 
 let add = (num1, num2) => {
     return answer = num1 + num2;
@@ -45,25 +45,42 @@ let updateNumbers = () => {
     if (operatorHighlighted != undefined) {
         removeHighlightFromOperatorButton();
     }
-    //Set lastButtonPressed to be equal to "number"
-    lastButtonPressed = "number";
+    //Set lastInput to be equal to "number"
+    lastInput = "number";
 
 }
 
 let updateOperator = (event) => {
-    //If operator is not undefined, then we call clickedEquals to act as if the equals button was clicked
+    determineTargetContent();
+    //If operator is not undefined, then check value of lastInput
     if (operator != undefined) {
-        clickedEquals();
+        //If lastInput == "operator", then remove highlight from previous operator element
+        if (lastInput == "operator") {
+            //Remove highlight from previous operator
+            operatorHighlighted.classList.toggle("highlightOperator");
+        } else {
+            clickedEquals();
+        }
     }
-    //Set value of operator equal to the id of the event target 
-    operator = event.target.id;
-    //Add operator class to the operator button clicked so it is highlighted on page
-    event.target.classList.add("highlightOperator"); 
+    //Set value of operator equal to the value of targetContent
+    operator = targetContent;
+    if (event instanceof PointerEvent) {
+        //Add operator class to the operator button clicked so it is highlighted on page
+        event.target.classList.add("highlightOperator"); 
+        operatorHighlighted = event.target;
+    } else {
+        //Find the operator button whose text content matches the event.id (stored in targetContent)
+            //Iterate through operatorButtons nl to find match
+        let operatorButtonPressed = Array.from(operatorButtons).find(button => button.textContent == targetContent);
+        operatorButtonPressed.classList.add("highlightOperator");
+        operatorHighlighted = operatorButtonPressed;
+    }
+    
     //Store the operator button that is highlighted in var operatorHighlighted
-    operatorHighlighted = event.target;
+    
     //Update lastNumber to equal the current displayed number
     lastNumber = Number(display.textContent);
-    lastButtonPressed = "operator";
+    lastInput = "operator";
 }
 
 let clickedEquals = () => {
@@ -91,24 +108,39 @@ let clearMemory = () => {
 }
 
 deleteLastNumberInput = () => {
-    if (lastButtonPressed == "number") {
-        display.textContent = display.textContent.substring(0, display.textContent.length - 1);
-        currentNumber = Number(display.textContent);
-    }
+    
+    display.textContent = display.textContent.substring(0, display.textContent.length - 1);
+    lastNumber = Number(display.textContent);
+    
     if (display.textContent == "") {
         display.textContent = 0;
     }    
 }
 
-let determineDisplay = () => {
-    if (display.textContent == 0) {
-        display.textContent = `${event.target.textContent}`;
-    } else if (lastButtonPressed === "number") {
-        display.textContent += `${event.target.textContent}`;
+let determineTargetContent = () => {
+   console.log(event)
+
+    if (event instanceof KeyboardEvent) {
+        targetContent = event.key;
+        console.log("KE yes")
     } else {
-        display.textContent = event.target.textContent
+        targetContent = event.target.textContent;
+        console.log("Pointer yes")
     }
-    return display.textContent;
+    console.log(targetContent)
+    console.log(event.key)
+}
+
+let determineDisplay = () => {
+    determineTargetContent();
+
+    if (display.textContent == 0) {
+        display.textContent = `${targetContent}`;
+    } else if (lastInput === "number") {
+        display.textContent += `${targetContent}`;
+    } else {
+        display.textContent = `${targetContent}`;
+    }
 }
 
 let inputDecimal = () => {
@@ -117,7 +149,29 @@ let inputDecimal = () => {
     }
 }
 
+let determineButtonType = (event) => {
+    console.log(event)
+    
+    if (event.key == 0 || event.key == 1 || event.key == 2 || event.key == 3 || event.key == 4 || event.key == 5 || event.key == 6 || 
+        event.key == 7 || event.key == 8 || event.key == 9) {
+        updateNumbers();
+    } else if (event.key == "+" || event.key == "-" || event.key == "*" || event.key == "/") {
+        updateOperator();
+    } else if (event.key == "Enter" || event.key == "=") {
+        clickedEquals();
+    } else if (event.key == ".") {
+        inputDecimal();
+    } else if (event.key == "Backspace") {
+        deleteLastNumberInput();
+    } else if (event.key == "Delete") {
+        clearMemory();
+    }
+}
+    
+
+
 //////////////////////////////////////////////////////////
+let targetContent;
 //Create var for lastNumber that will store the last number that was pressed and initialize to 0
 let lastNumber = 0;
 //Create var operator and init to undef -> this will be used to keep track of what function the operate function will call
@@ -129,8 +183,8 @@ let currentNumber;
 let answer;
 //Create var operatorHighlighted and init to undef -> will be used to keep track of which operator button should be highlighted on page
 let operatorHighlighted;
-//Create var lastButtonPressed and init to undef 
-let lastButtonPressed;
+//Create var lastInput and init to undef 
+let lastInput;
 //Create an undefined array digits that will be used to keep track of what number to display 
 let digits = [];
 //Create var display that selects the calculator display -> we will use this to update the display to show the last button pressed or the answer to the operation
@@ -163,3 +217,8 @@ del.addEventListener("click", deleteLastNumberInput)
 //Create var that stores "decimal" button element
 let decimal = document.querySelector("#decimal");
 decimal.addEventListener("click", inputDecimal)
+
+//Create Nodelist of all buttons
+let buttons = document.querySelectorAll("button");
+
+window.addEventListener("keydown", determineButtonType)
